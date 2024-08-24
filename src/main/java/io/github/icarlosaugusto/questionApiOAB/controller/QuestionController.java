@@ -8,11 +8,15 @@ import io.github.icarlosaugusto.questionApiOAB.repositories.DisciplineRepository
 import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/question")
@@ -47,7 +51,15 @@ public class QuestionController {
     }
 
     @GetMapping
-    public List<Question> getQuestions(){
-        return questionRepository.findAll();
+    public Page<Question> getQuestions(
+            @RequestParam(required = false) UUID disciplineId,
+            @RequestParam(required = false) UUID subjectId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Question> questionPage = questionRepository.findQuestionsBySubjectAndDiscipline(subjectId, disciplineId, pageable);
+
+        return questionPage;
     }
 }
