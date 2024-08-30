@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/subject")
 public class SubjectController {
 
     @Autowired
@@ -23,10 +22,12 @@ public class SubjectController {
     @Autowired
     private SubjectRepository subjectRepository;
 
-    @PostMapping
-    public Discipline createSubject(@RequestBody CreateSubjectDTO createSubjectDTO) {
-
-        Discipline discipline = disciplineRepository.findById(createSubjectDTO.getDisciplineId()).orElseThrow(
+    @PostMapping("/discipline/{disciplineId}/subject")
+    public Subject createSubject(
+            @RequestBody CreateSubjectDTO createSubjectDTO,
+            @PathVariable UUID disciplineId
+    ) {
+        Discipline discipline = disciplineRepository.findById(disciplineId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discipline not found")
         );
 
@@ -37,11 +38,11 @@ public class SubjectController {
         Subject newSubject = subjectRepository.save(subject);
 
         disciplineSubjects.add(newSubject);
-        return disciplineRepository.save(discipline);
+        return newSubject;
     }
 
-    @GetMapping
-    public List<Subject> getSubjects(){
-        return subjectRepository.findAll();
+    @GetMapping("/discipline/{disciplineId}/subject")
+    public List<Subject> getSubjectsByDisciplineId(@PathVariable UUID disciplineId) {
+        return subjectRepository.findSubjectsByDisciplineId(disciplineId);
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
-    
+
     @Query("SELECT q FROM Question q WHERE (:subjectId IS NULL OR q.subject.id = :subjectId) AND (:disciplineId IS NULL OR q.discipline.id = :disciplineId)")
     Page<Question> findQuestionsBySubjectAndDiscipline(
             @Param("subjectId") UUID subjectId,
