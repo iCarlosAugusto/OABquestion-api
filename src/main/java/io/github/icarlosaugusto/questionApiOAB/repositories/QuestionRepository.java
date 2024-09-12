@@ -7,14 +7,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
 
-    @Query("SELECT q FROM Question q WHERE (:subjectId IS NULL OR q.subject.id = :subjectId) AND (:disciplineId IS NULL OR q.discipline.id = :disciplineId)")
-    Page<Question> findQuestionsBySubjectAndDiscipline(
-            @Param("subjectId") UUID subjectId,
-            @Param("disciplineId") UUID disciplineId,
-            Pageable pageable);
+    @Query("SELECT q FROM Question q WHERE (:subjectIds IS NULL OR q.subject.id IN :subjectIds) AND (:disciplineIds IS NULL OR q.discipline.id IN :disciplineIds)")
+    Page<Question> findQuestionsBySubjectsAndDisciplines(
+            @Param("disciplineIds") List<String> disciplineIds,
+            @Param("subjectIds") List<String> subjectIds,
+            Pageable pageable
+    );
+
 
 }

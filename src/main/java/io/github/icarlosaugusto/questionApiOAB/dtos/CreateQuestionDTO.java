@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class CreateQuestionDTO {
 
-    private UUID subjectId;
+    private Long subjectId;
 
     private String questionName;
 

@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.UUID;
 
-public interface SubjectRepository extends JpaRepository<Subject, UUID> {
+public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
     @Query("SELECT s FROM Subject s WHERE s.disciplines.id = :disciplineId")
-    List<Subject> findSubjectsByDisciplineId(@Param("disciplineId") UUID disciplineId);
+    List<Subject> findSubjectsByDisciplineId(@Param("disciplineId") Long disciplineId);
 }

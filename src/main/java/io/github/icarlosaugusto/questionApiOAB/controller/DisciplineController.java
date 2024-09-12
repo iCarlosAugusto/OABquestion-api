@@ -1,12 +1,10 @@
 package io.github.icarlosaugusto.questionApiOAB.controller;
 
+import io.github.icarlosaugusto.questionApiOAB.dtos.CreateDisciplineDTO;
 import io.github.icarlosaugusto.questionApiOAB.entities.Discipline;
 import io.github.icarlosaugusto.questionApiOAB.repositories.DisciplineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,9 +16,10 @@ public class DisciplineController {
     private DisciplineRepository disciplineRepository;
 
     @PostMapping
-    public Discipline createDiscipline() {
-        Discipline discipline = new Discipline();
-        discipline.setName("Direito Civil");
+    public Discipline createDiscipline(
+            @RequestBody CreateDisciplineDTO createDisciplineDTO
+    ) {
+        Discipline discipline = createDisciplineDTO.toEntity();
         return disciplineRepository.save(discipline);
     }
 

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,14 +53,21 @@ public class QuestionController {
 
     @GetMapping
     public Page<Question> getQuestions(
-            @RequestParam(required = false) UUID disciplineId,
-            @RequestParam(required = false) UUID subjectId,
+            @RequestParam(required = false) String disciplines,
+            @RequestParam(required = false) String subjects,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
         Pageable pageable = PageRequest.of(page, size);
-        Page<Question> questionPage = questionRepository.findQuestionsBySubjectAndDiscipline(subjectId, disciplineId, pageable);
 
-        return questionPage;
+        List<String> disciplinesId = Arrays.asList(disciplines.split("%"));
+        List<String> subjectsId = Arrays.asList(subjects.split("%"));
+        System.out.println(disciplinesId);
+        System.out.println(subjectsId);
+        return questionRepository.findQuestionsBySubjectsAndDisciplines(
+                disciplinesId,
+                subjectsId,
+                pageable
+        );
     }
 }

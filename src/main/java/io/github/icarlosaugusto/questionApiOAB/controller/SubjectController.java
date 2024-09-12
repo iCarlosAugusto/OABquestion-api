@@ -25,7 +25,7 @@ public class SubjectController {
     @PostMapping("/discipline/{disciplineId}/subject")
     public Subject createSubject(
             @RequestBody CreateSubjectDTO createSubjectDTO,
-            @PathVariable UUID disciplineId
+            @PathVariable Long disciplineId
     ) {
         Discipline discipline = disciplineRepository.findById(disciplineId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discipline not found")
@@ -42,7 +42,7 @@ public class SubjectController {
     }
 
     @GetMapping("/discipline/{disciplineId}/subject")
-    public List<Subject> getSubjectsByDisciplineId(@PathVariable UUID disciplineId) {
+    public List<Subject> getSubjectsByDisciplineId(@PathVariable Long disciplineId) {
         return subjectRepository.findSubjectsByDisciplineId(disciplineId);
     }
 }
