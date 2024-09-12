@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/question")
@@ -57,17 +56,22 @@ public class QuestionController {
             @RequestParam(required = false) String subjects,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
-    ){
+    ) {
         Pageable pageable = PageRequest.of(page, size);
 
-        List<String> disciplinesId = Arrays.asList(disciplines.split("%"));
-        List<String> subjectsId = Arrays.asList(subjects.split("%"));
-        System.out.println(disciplinesId);
-        System.out.println(subjectsId);
+        List<String> disciplinesId = (disciplines != null && !disciplines.isEmpty())
+                ? Arrays.asList(disciplines.split("%"))
+                : List.of();
+
+        List<String> subjectsId = (subjects != null && !subjects.isEmpty())
+                ? Arrays.asList(subjects.split("%"))
+                : List.of();
+
         return questionRepository.findQuestionsBySubjectsAndDisciplines(
-                disciplinesId,
-                subjectsId,
+                disciplinesId.isEmpty() ? null : disciplinesId,
+                subjectsId.isEmpty() ? null : subjectsId,
                 pageable
         );
     }
+
 }

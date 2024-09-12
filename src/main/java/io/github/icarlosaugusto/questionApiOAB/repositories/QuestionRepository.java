@@ -12,12 +12,13 @@ import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
 
-    @Query("SELECT q FROM Question q WHERE (:subjectIds IS NULL OR q.subject.id IN :subjectIds) AND (:disciplineIds IS NULL OR q.discipline.id IN :disciplineIds)")
+    @Query("SELECT q FROM Question q WHERE "
+            + "(COALESCE(:subjectIds, NULL) IS NULL OR q.subject.id IN (:subjectIds)) "
+            + "AND (COALESCE(:disciplineIds, NULL) IS NULL OR q.discipline.id IN (:disciplineIds))"
+    )
     Page<Question> findQuestionsBySubjectsAndDisciplines(
             @Param("disciplineIds") List<String> disciplineIds,
             @Param("subjectIds") List<String> subjectIds,
             Pageable pageable
     );
-
-
 }
