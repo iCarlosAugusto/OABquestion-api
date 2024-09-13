@@ -1,9 +1,12 @@
 package io.github.icarlosaugusto.questionApiOAB.controller;
 
+import io.github.icarlosaugusto.questionApiOAB.dtos.AlternativeDTO;
 import io.github.icarlosaugusto.questionApiOAB.dtos.CreateQuestionDTO;
+import io.github.icarlosaugusto.questionApiOAB.entities.Alternative;
 import io.github.icarlosaugusto.questionApiOAB.entities.Discipline;
 import io.github.icarlosaugusto.questionApiOAB.entities.Question;
 import io.github.icarlosaugusto.questionApiOAB.entities.Subject;
+import io.github.icarlosaugusto.questionApiOAB.repositories.AlternativeRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.DisciplineRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.SubjectRepository;
@@ -31,6 +34,9 @@ public class QuestionController {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private AlternativeRepository alternativeRepository;
+
     @PostMapping
     public Question createQuestion(@RequestBody CreateQuestionDTO createQuestionDTO) {
         Subject subject = subjectRepository.findById(createQuestionDTO.getSubjectId()).orElseThrow(
@@ -39,11 +45,20 @@ public class QuestionController {
 
         Discipline discipline = subject.getDisciplines();
 
+        List<Alternative> alternatives = createQuestionDTO.getAlternatives().stream().map(AlternativeDTO::toEntity).toList();
+        List<Alternative> alternativesCreated = alternativeRepository.saveAll(alternatives);
+
+
         Question question = createQuestionDTO.toEntity();
         question.setDiscipline(discipline);
         question.setSubject(subject);
+        question.setAlternatives(alternatives);
 
         Question questionCreated = questionRepository.save(question);
+        alternativesCreated.forEach(el -> {
+            el.setQuestion(questionCreated);
+            alternativeRepository.save(el);
+        });
 
         List<Question> subjectQuestions = subject.getQuestions();
         subjectQuestions.add(questionCreated);

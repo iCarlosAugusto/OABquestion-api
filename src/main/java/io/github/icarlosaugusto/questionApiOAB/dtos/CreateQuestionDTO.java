@@ -4,6 +4,7 @@ import io.github.icarlosaugusto.questionApiOAB.entities.Question;
 import io.github.icarlosaugusto.questionApiOAB.entities.Subject;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -12,12 +13,11 @@ public class CreateQuestionDTO {
     private Long subjectId;
 
     private String questionName;
-
+    private List<AlternativeDTO> alternatives;
 
     public Question toEntity() {
         Question question = new Question();
         question.setName(questionName);
-
         return question;
     }
 }

@@ -1,9 +1,10 @@
 package io.github.icarlosaugusto.questionApiOAB.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.mapping.Join;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -15,6 +16,9 @@ public class Question {
     private UUID id;
 
     private String name;
+
+    @OneToMany
+    private List<Alternative> alternatives;
 
     @ManyToOne
     @JoinColumn(name = "subject_id")
