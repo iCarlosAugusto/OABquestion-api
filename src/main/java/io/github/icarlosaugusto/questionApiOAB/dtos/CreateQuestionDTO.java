@@ -9,13 +9,13 @@ import java.util.List;
 public class CreateQuestionDTO {
 
     private Long subjectId;
-    private String questionName;
+    private String text;
     private QuestionType questionType;
     private List<AlternativeDTO> alternatives;
 
     public Question toEntity() {
         Question question = new Question();
-        question.setName(questionName);
+        question.setText(text);
         question.setQuestionType(questionType);
         return question;
     }

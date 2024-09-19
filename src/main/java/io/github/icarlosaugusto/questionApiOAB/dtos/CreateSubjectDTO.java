@@ -7,13 +7,12 @@ import lombok.Data;
 public class CreateSubjectDTO {
 
 
-    private String subjectName;
+    private String name;
 
 
     public Subject toEntity() {
         Subject subject = new Subject();
-        subject.setName(subjectName);
-
+        subject.setName(name);
         return subject;
     }
 }

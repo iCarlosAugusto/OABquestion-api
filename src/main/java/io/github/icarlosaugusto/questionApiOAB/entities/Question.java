@@ -16,7 +16,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String name;
+    private String text;
 
     private QuestionType questionType;
 

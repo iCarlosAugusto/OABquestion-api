@@ -1,11 +1,7 @@
 package io.github.icarlosaugusto.questionApiOAB.controller;
 
-import io.github.icarlosaugusto.questionApiOAB.dtos.AlternativeDTO;
 import io.github.icarlosaugusto.questionApiOAB.dtos.CreateQuestionDTO;
-import io.github.icarlosaugusto.questionApiOAB.entities.Alternative;
-import io.github.icarlosaugusto.questionApiOAB.entities.Discipline;
 import io.github.icarlosaugusto.questionApiOAB.entities.Question;
-import io.github.icarlosaugusto.questionApiOAB.entities.Subject;
 import io.github.icarlosaugusto.questionApiOAB.repositories.AlternativeRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.DisciplineRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
@@ -15,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
