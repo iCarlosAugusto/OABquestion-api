@@ -42,10 +42,20 @@ public class QuestionService {
         });
     }
 
-    private boolean validateQuestion(CreateQuestionDTO createQuestionDTO){
-        return false;
-        //createQuestionDTO.getAlternatives()
+    private boolean validateQuestion(CreateQuestionDTO createQuestionDTO) {
+        switch (createQuestionDTO.getQuestionType()) {
+            case MULTIPLE_CHOICES -> {
+                long correctAlternativesCount = createQuestionDTO.getAlternatives().stream()
+                        .filter(AlternativeDTO::isCorrect)
+                        .count();
+                return correctAlternativesCount == 1;
+            }
+            default -> {
+                return false;
+            }
+        }
     }
+
 
     private List<UUID> getCorrectAlternativesId(List<Alternative> alternatives) {
         List<Alternative> correctAlternatives = alternatives.stream().filter(Alternative::isCorrect).toList();
@@ -56,6 +66,11 @@ public class QuestionService {
         Subject subject = subjectRepository.findById(createQuestionDTO.getSubjectId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discipline not found")
         );
+
+        boolean isQuestionValid = this.validateQuestion(createQuestionDTO);
+        if(!isQuestionValid){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Question body is not correct");
+        }
 
         Discipline discipline = subject.getDisciplines();
 
