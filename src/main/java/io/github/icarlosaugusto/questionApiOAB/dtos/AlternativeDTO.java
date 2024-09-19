@@ -9,13 +9,13 @@ import java.util.UUID;
 public class AlternativeDTO {
 
     private String text;
-    private boolean correct;
+    private boolean correct = false;
 
     public Alternative toEntity() {
-
         Alternative alternative = new Alternative();
+        alternative.setId(UUID.randomUUID());
         alternative.setText(text);
-
+        alternative.setCorrect(correct);
         return alternative;
     }
 }

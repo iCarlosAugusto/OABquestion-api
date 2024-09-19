@@ -10,6 +10,7 @@ import io.github.icarlosaugusto.questionApiOAB.repositories.AlternativeRepositor
 import io.github.icarlosaugusto.questionApiOAB.repositories.DisciplineRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.SubjectRepository;
+import io.github.icarlosaugusto.questionApiOAB.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,32 +38,12 @@ public class QuestionController {
     @Autowired
     private AlternativeRepository alternativeRepository;
 
+    @Autowired
+    private QuestionService questionService;
+
     @PostMapping
     public Question createQuestion(@RequestBody CreateQuestionDTO createQuestionDTO) {
-        Subject subject = subjectRepository.findById(createQuestionDTO.getSubjectId()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discipline not found")
-        );
-
-        Discipline discipline = subject.getDisciplines();
-
-        List<Alternative> alternatives = createQuestionDTO.getAlternatives().stream().map(AlternativeDTO::toEntity).toList();
-        List<Alternative> alternativesCreated = alternativeRepository.saveAll(alternatives);
-
-
-        Question question = createQuestionDTO.toEntity();
-        question.setDiscipline(discipline);
-        question.setSubject(subject);
-        question.setAlternatives(alternatives);
-
-        Question questionCreated = questionRepository.save(question);
-        alternativesCreated.forEach(el -> {
-            el.setQuestion(questionCreated);
-            alternativeRepository.save(el);
-        });
-
-        List<Question> subjectQuestions = subject.getQuestions();
-        subjectQuestions.add(questionCreated);
-        return question;
+        return questionService.createQuestion(createQuestionDTO);
     }
 
     @GetMapping

@@ -1,6 +1,6 @@
 package io.github.icarlosaugusto.questionApiOAB.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.github.icarlosaugusto.questionApiOAB.enums.QuestionType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,6 +16,10 @@ public class Question {
     private UUID id;
 
     private String name;
+
+    private QuestionType questionType;
+
+    private List<UUID> correctAlternativesId;
 
     @OneToMany
     private List<Alternative> alternatives;
