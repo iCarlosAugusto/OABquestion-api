@@ -18,6 +18,7 @@ public class Alternative {
 
     private String text;
 
+    @JsonIgnore
     private boolean correct;
 
     @ManyToOne()
