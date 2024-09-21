@@ -2,6 +2,7 @@ package io.github.icarlosaugusto.questionApiOAB.services;
 
 import io.github.icarlosaugusto.questionApiOAB.dtos.AlternativeDTO;
 import io.github.icarlosaugusto.questionApiOAB.dtos.CreateQuestionDTO;
+import io.github.icarlosaugusto.questionApiOAB.dtos.ValidateQuestionDTO;
 import io.github.icarlosaugusto.questionApiOAB.entities.Alternative;
 import io.github.icarlosaugusto.questionApiOAB.entities.Discipline;
 import io.github.icarlosaugusto.questionApiOAB.entities.Question;
@@ -9,8 +10,10 @@ import io.github.icarlosaugusto.questionApiOAB.entities.Subject;
 import io.github.icarlosaugusto.questionApiOAB.repositories.AlternativeRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.SubjectRepository;
+import io.github.icarlosaugusto.questionApiOAB.responses.ValidateReplyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -87,5 +90,30 @@ public class QuestionService {
         this.vinculateAlternativeToQuestion(alternatives, questionCreated);
 
         return question;
+    }
+
+    public ResponseEntity<ValidateReplyResponse> validateReply(UUID questionId, ValidateQuestionDTO validateQuestionDTO) {
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Questão não existe")
+        );
+
+        Alternative pickedAlternative = question.getAlternatives().stream().filter(
+                el -> el.getId().equals(validateQuestionDTO.getAlternativeId())
+        ).findFirst().orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Questão não contém nenhuma alternativa com o id oferecido")
+        );
+
+
+        Alternative correctAlternative = question.getAlternatives().stream().filter(
+                Alternative::isCorrect
+        ).findFirst().orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Questão não contém nenhuma alternativa com o id oferecido")
+        );;
+
+        ValidateReplyResponse validateReplyResponse = new ValidateReplyResponse();
+        validateReplyResponse.setReplyCorrect(pickedAlternative.isCorrect());
+        validateReplyResponse.setCorrectAlternativeId(correctAlternative.getId());
+
+        return ResponseEntity.ok(validateReplyResponse);
     }
 }

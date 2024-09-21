@@ -1,20 +1,24 @@
 package io.github.icarlosaugusto.questionApiOAB.controller;
 
 import io.github.icarlosaugusto.questionApiOAB.dtos.CreateQuestionDTO;
+import io.github.icarlosaugusto.questionApiOAB.dtos.ValidateQuestionDTO;
 import io.github.icarlosaugusto.questionApiOAB.entities.Question;
 import io.github.icarlosaugusto.questionApiOAB.repositories.AlternativeRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.DisciplineRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.SubjectRepository;
+import io.github.icarlosaugusto.questionApiOAB.responses.ValidateReplyResponse;
 import io.github.icarlosaugusto.questionApiOAB.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/question")
@@ -64,4 +68,11 @@ public class QuestionController {
         );
     }
 
+    @PostMapping("/{questionId}/validateReply")
+    public ResponseEntity<ValidateReplyResponse> validateReply(
+            @PathVariable UUID questionId,
+            @RequestBody ValidateQuestionDTO validateQuestionDTO
+            ) {
+        return questionService.validateReply(questionId, validateQuestionDTO);
+    }
 }
