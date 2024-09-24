@@ -6,9 +6,7 @@ import lombok.Data;
 @Data
 public class CreateSubjectDTO {
 
-
     private String name;
-
 
     public Subject toEntity() {
         Subject subject = new Subject();
