@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.github.icarlosaugusto</groupId>
 	<artifactId>questionApiOAB</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>questionApiOAB</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
