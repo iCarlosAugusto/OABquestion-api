@@ -35,6 +35,9 @@ public class QuestionService {
 
     private List<Alternative> createAlternatives(List<AlternativeDTO> alternativesDTO){
         List<Alternative> alternatives = alternativesDTO.stream().map(AlternativeDTO::toEntity).toList();
+        for (int i = 0; i < alternatives.size(); i++) {
+            alternatives.get(i).setAlternativeLetterByIndex(i);
+        }
         return alternativeRepository.saveAll(alternatives);
     }
 

@@ -21,8 +21,34 @@ public class Alternative {
     @JsonIgnore
     private boolean correct;
 
+    private String alternativeLetter;
+
     @ManyToOne()
     @JoinColumn(name = "question_id")
     @JsonIgnore
     private Question question;
+
+
+    public void setAlternativeLetterByIndex(int index){
+        switch (index) {
+            case 0:
+                this.setAlternativeLetter("a");
+                break;
+            case 1:
+                this.setAlternativeLetter("b");
+                break;
+            case 2:
+                this.setAlternativeLetter("c");
+                break;
+            case 3:
+                this.setAlternativeLetter("d");
+                break;
+            case 4:
+                this.setAlternativeLetter("e");
+                break;
+            default:
+                System.out.println("Invalid alternative letter");
+                break;
+        }
+    }
 }
