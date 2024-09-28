@@ -1,8 +1,8 @@
 package io.github.icarlosaugusto.questionApiOAB.controller;
 
-import io.github.icarlosaugusto.questionApiOAB.dtos.CreateUserDTO;
+import io.github.icarlosaugusto.questionApiOAB.dtos.AuthDTO;
 import io.github.icarlosaugusto.questionApiOAB.entities.User;
-import io.github.icarlosaugusto.questionApiOAB.services.UserService;
+import io.github.icarlosaugusto.questionApiOAB.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/auth")
+public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @PostMapping
-    public User createUser(@RequestBody CreateUserDTO createUserDTO) {
-        return userService.createUser(createUserDTO);
+    User authenticate(@RequestBody AuthDTO authDTO) {
+        return authService.authenticate(authDTO);
     }
 }
