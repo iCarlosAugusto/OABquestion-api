@@ -1,5 +1,6 @@
 package io.github.icarlosaugusto.questionApiOAB.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,5 +16,7 @@ public class User {
     private UUID id;
     private String name;
     private String email;
+
+    @JsonIgnore
     private String password;
 }
