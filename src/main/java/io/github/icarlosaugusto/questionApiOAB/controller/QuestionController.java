@@ -48,6 +48,8 @@ public class QuestionController {
     public Page<Question> getQuestions(
             @RequestParam(required = false) String disciplines,
             @RequestParam(required = false) String subjects,
+            @RequestParam(required = false) UUID userId,
+            @RequestParam(required = false, defaultValue = "all") String myQuestion,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -64,6 +66,8 @@ public class QuestionController {
         return questionRepository.findQuestionsBySubjectsAndDisciplines(
                 disciplinesId.isEmpty() ? null : disciplinesId,
                 subjectsId.isEmpty() ? null : subjectsId,
+                userId,
+                myQuestion,
                 pageable
         );
     }
