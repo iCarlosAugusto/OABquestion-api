@@ -6,6 +6,8 @@ import io.github.icarlosaugusto.questionApiOAB.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -16,5 +18,9 @@ public class UserService {
         User user = createUserDTO.toEntity();
 
         return this.userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
+        return this.userRepository.findAll();
     }
 }

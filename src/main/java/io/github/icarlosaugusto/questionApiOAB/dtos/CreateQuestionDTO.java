@@ -10,7 +10,7 @@ public class CreateQuestionDTO {
 
     private Long subjectId;
     private String text;
-    private QuestionType questionType;
+    private QuestionType questionType = QuestionType.MULTIPLE_CHOICES;
     private List<AlternativeDTO> alternatives;
 
     public Question toEntity() {

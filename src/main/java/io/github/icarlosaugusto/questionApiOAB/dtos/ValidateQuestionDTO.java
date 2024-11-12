@@ -8,4 +8,5 @@ import java.util.UUID;
 public class ValidateQuestionDTO {
 
     private UUID alternativeId;
+    private UUID userId;
 }

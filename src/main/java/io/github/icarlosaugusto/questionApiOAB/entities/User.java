@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -19,4 +20,7 @@ public class User {
 
     @JsonIgnore
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<RepliedQuestion> repliedQuestions;
 }

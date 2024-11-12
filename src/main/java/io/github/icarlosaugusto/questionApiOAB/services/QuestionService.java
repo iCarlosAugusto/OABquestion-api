@@ -3,13 +3,11 @@ package io.github.icarlosaugusto.questionApiOAB.services;
 import io.github.icarlosaugusto.questionApiOAB.dtos.AlternativeDTO;
 import io.github.icarlosaugusto.questionApiOAB.dtos.CreateQuestionDTO;
 import io.github.icarlosaugusto.questionApiOAB.dtos.ValidateQuestionDTO;
-import io.github.icarlosaugusto.questionApiOAB.entities.Alternative;
-import io.github.icarlosaugusto.questionApiOAB.entities.Discipline;
-import io.github.icarlosaugusto.questionApiOAB.entities.Question;
-import io.github.icarlosaugusto.questionApiOAB.entities.Subject;
+import io.github.icarlosaugusto.questionApiOAB.entities.*;
 import io.github.icarlosaugusto.questionApiOAB.repositories.AlternativeRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.SubjectRepository;
+import io.github.icarlosaugusto.questionApiOAB.repositories.UserRepository;
 import io.github.icarlosaugusto.questionApiOAB.responses.ValidateReplyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,6 +30,9 @@ public class QuestionService {
 
     @Autowired
     private AlternativeRepository alternativeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     private List<Alternative> createAlternatives(List<AlternativeDTO> alternativesDTO){
@@ -95,6 +97,30 @@ public class QuestionService {
         return question;
     }
 
+
+    private void saveQuestionInUserHistory(User user, Question question, boolean repliedCorrect) {
+        List<RepliedQuestion> userRepliedQuestions = user.getRepliedQuestions();
+
+        RepliedQuestion newRepliedQuestion = new RepliedQuestion();
+        newRepliedQuestion.setQuestion(question);
+        newRepliedQuestion.setUser(user);
+        newRepliedQuestion.setRepliedCorrect(repliedCorrect);
+
+        userRepliedQuestions.add(newRepliedQuestion);
+        userRepository.save(user);
+
+//        boolean userAlreadyReplied = userRepliedQuestions.stream().anyMatch(el -> el.getQuestion().getId().equals(question.getId()));
+//        if(!userAlreadyReplied){
+//            userRepliedQuestions.add(newRepliedQuestion);
+//        }else{
+//            Optional<RepliedQuestion> repliedQuestion = userRepliedQuestions.stream()
+//                    .filter(el -> el.getQuestion.getQuestionId().equals(questionId))
+//                    .findFirst();
+//            repliedQuestion.get().setRepliedCorrect(pickedAlternative.isCorrect());
+//        }
+
+    }
+
     public ResponseEntity<ValidateReplyResponse> validateReply(UUID questionId, ValidateQuestionDTO validateQuestionDTO) {
         Question question = questionRepository.findById(questionId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Questão não existe")
@@ -111,7 +137,33 @@ public class QuestionService {
                 Alternative::isCorrect
         ).findFirst().orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Questão não contém nenhuma alternativa com o id oferecido")
-        );;
+        );
+
+
+
+        User user = userRepository.findById(validateQuestionDTO.getUserId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não enconcotrado para o ID fornecido")
+        );
+
+        this.saveQuestionInUserHistory(user, question, pickedAlternative.isCorrect());
+//
+//        List<RepliedQuestion> userRepliedQuestions = user.getRepliedQuestion();
+//
+//        RepliedQuestion newRepliedQuestion = new RepliedQuestion();
+//        newRepliedQuestion.setQuestionId(questionId);
+//        newRepliedQuestion.setRepliedCorrect(pickedAlternative.isCorrect());
+//
+//        boolean userAlreadyReplied = userRepliedQuestions.stream().anyMatch(el -> el.getQuestionId().equals(questionId));
+//        if(!userAlreadyReplied){
+//            userRepliedQuestions.add(newRepliedQuestion);
+//        }else{
+//            Optional<RepliedQuestion> repliedQuestion = userRepliedQuestions.stream()
+//                    .filter(el -> el.getQuestionId().equals(questionId))
+//                    .findFirst();
+//            repliedQuestion.get().setRepliedCorrect(pickedAlternative.isCorrect());
+//        }
+//
+//        userRepository.save(user);
 
         ValidateReplyResponse validateReplyResponse = new ValidateReplyResponse();
         validateReplyResponse.setReplyCorrect(pickedAlternative.isCorrect());
