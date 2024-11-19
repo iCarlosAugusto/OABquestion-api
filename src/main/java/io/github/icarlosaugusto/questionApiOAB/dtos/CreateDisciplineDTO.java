@@ -1,7 +1,6 @@
 package io.github.icarlosaugusto.questionApiOAB.dtos;
 
 import io.github.icarlosaugusto.questionApiOAB.entities.Discipline;
-import io.github.icarlosaugusto.questionApiOAB.entities.Question;
 import lombok.Data;
 
 @Data
