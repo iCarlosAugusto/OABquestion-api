@@ -20,6 +20,9 @@ public class User {
 
     @JsonIgnore
     private String password;
+    
+    private String tokenGoogle;
+    private String tokenApple;
 
     @OneToMany(mappedBy = "user")
     private List<RepliedQuestion> repliedQuestions;
