@@ -3,8 +3,6 @@ package io.github.icarlosaugusto.questionApiOAB.controller;
 import io.github.icarlosaugusto.questionApiOAB.dtos.CreateQuestionDTO;
 import io.github.icarlosaugusto.questionApiOAB.dtos.ValidateQuestionDTO;
 import io.github.icarlosaugusto.questionApiOAB.entities.Question;
-import io.github.icarlosaugusto.questionApiOAB.repositories.AlternativeRepository;
-import io.github.icarlosaugusto.questionApiOAB.repositories.DisciplineRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.SubjectRepository;
 import io.github.icarlosaugusto.questionApiOAB.responses.ValidateReplyResponse;
@@ -25,16 +23,10 @@ import java.util.UUID;
 public class QuestionController {
 
     @Autowired
-    private DisciplineRepository disciplineRepository;
-
-    @Autowired
     SubjectRepository subjectRepository;
 
     @Autowired
     private QuestionRepository questionRepository;
-
-    @Autowired
-    private AlternativeRepository alternativeRepository;
 
     @Autowired
     private QuestionService questionService;
