@@ -43,8 +43,8 @@ public class Question {
         questionResponse.setQuestionType(this.questionType);
         questionResponse.setCorrectAlternativesId(this.correctAlternativesId);
         questionResponse.setAlternatives(this.alternatives);
-        questionResponse.setSubjectId(this.subject.getId());
-        questionResponse.setDisciplineId(this.discipline.getId());
+        questionResponse.setDiscipline(this.discipline);
+        questionResponse.setSubject(this.subject);
 
         if(user.isPresent()){
             Optional<RepliedQuestion> repliedQuestion = user.get().getRepliedQuestions().stream().filter(el -> el.getQuestion().getId().equals(this.id)).findFirst();

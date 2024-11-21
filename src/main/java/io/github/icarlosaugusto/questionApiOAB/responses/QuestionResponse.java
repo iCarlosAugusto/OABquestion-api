@@ -1,6 +1,8 @@
 package io.github.icarlosaugusto.questionApiOAB.responses;
 
 import io.github.icarlosaugusto.questionApiOAB.entities.Alternative;
+import io.github.icarlosaugusto.questionApiOAB.entities.Discipline;
+import io.github.icarlosaugusto.questionApiOAB.entities.Subject;
 import io.github.icarlosaugusto.questionApiOAB.enums.QuestionType;
 import lombok.Data;
 
@@ -19,9 +21,9 @@ public class QuestionResponse {
 
     private List<Alternative> alternatives;
 
-    private Long subjectId;
+    private Subject subject;
 
-    private Long disciplineId;
+    private Discipline discipline;
 
     private Boolean repliedCorrect = null;
 
