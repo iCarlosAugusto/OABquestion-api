@@ -4,10 +4,7 @@ import io.github.icarlosaugusto.questionApiOAB.dtos.AlternativeDTO;
 import io.github.icarlosaugusto.questionApiOAB.dtos.CreateQuestionDTO;
 import io.github.icarlosaugusto.questionApiOAB.dtos.ValidateQuestionDTO;
 import io.github.icarlosaugusto.questionApiOAB.entities.*;
-import io.github.icarlosaugusto.questionApiOAB.repositories.AlternativeRepository;
-import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
-import io.github.icarlosaugusto.questionApiOAB.repositories.SubjectRepository;
-import io.github.icarlosaugusto.questionApiOAB.repositories.UserRepository;
+import io.github.icarlosaugusto.questionApiOAB.repositories.*;
 import io.github.icarlosaugusto.questionApiOAB.responses.ValidateReplyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +29,9 @@ public class QuestionService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RepliedQuestionRepository repliedQuestionRepository;
 
 
     private List<Alternative> createAlternatives(List<AlternativeDTO> alternativesDTO){
@@ -104,6 +104,7 @@ public class QuestionService {
         newRepliedQuestion.setQuestion(question);
         newRepliedQuestion.setUser(user);
         newRepliedQuestion.setRepliedCorrect(repliedCorrect);
+        repliedQuestionRepository.save(newRepliedQuestion);
 
         userRepliedQuestions.add(newRepliedQuestion);
         userRepository.save(user);
