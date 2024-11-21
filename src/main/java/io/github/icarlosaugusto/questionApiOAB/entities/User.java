@@ -1,6 +1,7 @@
 package io.github.icarlosaugusto.questionApiOAB.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,5 +26,6 @@ public class User {
     private String tokenApple;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties({"id", "user"})
     private List<RepliedQuestion> repliedQuestions;
 }
