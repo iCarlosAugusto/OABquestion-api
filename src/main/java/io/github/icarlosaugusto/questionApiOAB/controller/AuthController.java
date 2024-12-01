@@ -38,7 +38,7 @@ public class AuthController {
     public ResponseEntity<?> authenticate(@RequestBody AuthDTO authDTO) {
         User user = authService.authenticate(authDTO);
         if (user != null){
-        	String token = jwtTokenService.generateToken(user.getEmail(), "USER"); // Exemplo: "USER" como role
+        	String token = jwtTokenService.generateToken(user, "USER"); 
             return ResponseEntity.ok(Map.of("success", true, "token", token, "userId", user.getId(), "email", user.getEmail(), "name", user.getName()));
         } else 
         	return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("Credenciais inválidas.");
@@ -51,7 +51,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.SC_CONFLICT).body("Email já está em uso.");
 
         User newUser = authService.register(authDTO);
-        String token = jwtTokenService.generateToken(newUser.getEmail(), "USER"); 
+        String token = jwtTokenService.generateToken(newUser, "USER"); 
         return ResponseEntity.ok(Map.of("success", true, "userId", newUser.getId(), "token", token, "email", newUser.getEmail(), "name", newUser.getName()));
     }
 

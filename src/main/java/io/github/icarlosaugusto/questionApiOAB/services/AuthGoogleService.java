@@ -46,7 +46,7 @@ public class AuthGoogleService {
                 
                 // Fazer login ou registrar o usuário com base nas informações obtidas
                 User user = loginOrRegister(userInfo);
-                String tokenSessao = jwtTokenService.generateToken(user.getEmail(), "USER"); // Exemplo: "USER" como role
+                String tokenSessao = jwtTokenService.generateToken(user, "USER"); // Exemplo: "USER" como role
                 return ResponseEntity.ok().body(Map.of("success", true, "userId", user.getId(), "token", tokenSessao, "email", user.getEmail(), "name", user.getName()));
             } else {
                 return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("Access token inválido.");

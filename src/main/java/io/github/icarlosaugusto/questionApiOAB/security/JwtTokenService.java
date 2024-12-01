@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import io.github.icarlosaugusto.questionApiOAB.entities.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -22,13 +24,16 @@ public class JwtTokenService {
     	this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
     
-    public String generateToken(String username, String role) {
+    public String generateToken(User user, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role); 
-
+        claims.put("idUser", user.getId());
+        claims.put("name", user.getName());
+        claims.put("email", user.getEmail());
+        
         return Jwts.builder()
                 .setClaims(claims) 
-                .setSubject(username) 
+                .setSubject(user.getName()) 
                 .setIssuedAt(new Date(System.currentTimeMillis())) 
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(secretKey) 

@@ -27,7 +27,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/google", "/auth/apple", "/auth/login", "/auth/register").permitAll() 
                 .anyRequest().authenticated()
-            )
+//            		.anyRequest().permitAll()
+            		)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
