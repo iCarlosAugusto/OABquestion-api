@@ -6,6 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.icarlosaugusto.questionApiOAB.entities.JwtUser;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +31,7 @@ public class JwtTokenService {
     public String generateToken(User user, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role); 
-        claims.put("idUser", user.getId());
+        claims.put("userId", user.getId());
         claims.put("name", user.getName());
         claims.put("email", user.getEmail());
         
@@ -38,5 +42,21 @@ public class JwtTokenService {
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(secretKey) 
                 .compact(); 
+    }
+
+    public JwtUser parseToken(String token) {
+        try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7); // Remove the 'Bearer ' prefix
+            }
+            Jws<Claims> parsedToken = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+
+            return new JwtUser(parsedToken.getBody());
+        } catch (JwtException e) {
+            throw new IllegalArgumentException("Invalid token: " + e.getMessage(), e);
+        }
     }
 }
