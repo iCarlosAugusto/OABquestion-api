@@ -2,6 +2,7 @@ package io.github.icarlosaugusto.questionApiOAB.controller;
 
 import io.github.icarlosaugusto.questionApiOAB.dtos.CreateQuestionDTO;
 import io.github.icarlosaugusto.questionApiOAB.dtos.ValidateQuestionDTO;
+import io.github.icarlosaugusto.questionApiOAB.entities.JwtUser;
 import io.github.icarlosaugusto.questionApiOAB.entities.Question;
 import io.github.icarlosaugusto.questionApiOAB.entities.User;
 import io.github.icarlosaugusto.questionApiOAB.repositories.QuestionRepository;
@@ -9,6 +10,7 @@ import io.github.icarlosaugusto.questionApiOAB.repositories.SubjectRepository;
 import io.github.icarlosaugusto.questionApiOAB.repositories.UserRepository;
 import io.github.icarlosaugusto.questionApiOAB.responses.QuestionResponse;
 import io.github.icarlosaugusto.questionApiOAB.responses.ValidateReplyResponse;
+import io.github.icarlosaugusto.questionApiOAB.security.JwtTokenService;
 import io.github.icarlosaugusto.questionApiOAB.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,10 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/question")
@@ -40,6 +39,9 @@ public class QuestionController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtTokenService jwtTokenService;
+
     @PostMapping
     public Question createQuestion(@RequestBody CreateQuestionDTO createQuestionDTO) {
         return questionService.createQuestion(createQuestionDTO);
@@ -52,8 +54,11 @@ public class QuestionController {
             @RequestParam(required = false) UUID userId,
             @RequestParam(required = false, defaultValue = "all") String myQuestion,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestHeader("Authorization") String token
     ) {
+        JwtUser jwtUser = jwtTokenService.parseToken(token);
+
         Pageable pageable = PageRequest.of(page, size);
 
         List<String> disciplinesId = (disciplines != null && !disciplines.isEmpty())
@@ -67,7 +72,7 @@ public class QuestionController {
         Page<Question> questions = questionRepository.findQuestionsBySubjectsAndDisciplines(
                 disciplinesId.isEmpty() ? null : disciplinesId,
                 subjectsId.isEmpty() ? null : subjectsId,
-                userId,
+                jwtUser.getUserId(),
                 myQuestion,
                 pageable
         );
