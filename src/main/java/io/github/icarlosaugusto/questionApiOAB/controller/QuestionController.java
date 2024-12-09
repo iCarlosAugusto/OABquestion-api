@@ -85,8 +85,10 @@ public class QuestionController {
     @PostMapping("/{questionId}/validateReply")
     public ResponseEntity<ValidateReplyResponse> validateReply(
             @PathVariable UUID questionId,
-            @RequestBody ValidateQuestionDTO validateQuestionDTO
+            @RequestBody ValidateQuestionDTO validateQuestionDTO,
+            @RequestHeader("Authorization") String token
             ) {
-        return questionService.validateReply(questionId, validateQuestionDTO);
+        JwtUser jwtUser = jwtTokenService.parseToken(token);
+        return questionService.validateReply(questionId, jwtUser.getUserId(), validateQuestionDTO);
     }
 }
