@@ -121,7 +121,7 @@ public class QuestionService {
 
     }
 
-    public ResponseEntity<ValidateReplyResponse> validateReply(UUID questionId, ValidateQuestionDTO validateQuestionDTO) {
+    public ResponseEntity<ValidateReplyResponse> validateReply(UUID questionId, UUID userId, ValidateQuestionDTO validateQuestionDTO) {
         Question question = questionRepository.findById(questionId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Questão não existe")
         );
@@ -139,9 +139,7 @@ public class QuestionService {
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Questão não contém nenhuma alternativa com o id oferecido")
         );
 
-
-
-        User user = userRepository.findById(validateQuestionDTO.getUserId()).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não enconcotrado para o ID fornecido")
         );
 
