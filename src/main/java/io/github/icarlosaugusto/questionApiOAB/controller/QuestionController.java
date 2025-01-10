@@ -16,10 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -51,13 +49,12 @@ public class QuestionController {
     public Page<QuestionResponse> getQuestions(
             @RequestParam(required = false) String disciplines,
             @RequestParam(required = false) String subjects,
-            @RequestParam(required = false) UUID userId,
             @RequestParam(required = false, defaultValue = "all") String myQuestion,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestHeader("Authorization") String token
+            @RequestHeader(value = "Authorization", required = false) String token
     ) {
-        JwtUser jwtUser = jwtTokenService.parseToken(token);
+        JwtUser jwtUser = (token != null) ? jwtTokenService.parseToken(token) : null;
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -69,10 +66,12 @@ public class QuestionController {
                 ? Arrays.asList(subjects.split("%"))
                 : List.of();
 
+        UUID userId = (jwtUser != null) ? jwtUser.getUserId() : null;
+
         Page<Question> questions = questionRepository.findQuestionsBySubjectsAndDisciplines(
                 disciplinesId.isEmpty() ? null : disciplinesId,
                 subjectsId.isEmpty() ? null : subjectsId,
-                jwtUser.getUserId(),
+                userId,
                 myQuestion,
                 pageable
         );
