@@ -44,7 +44,23 @@ public class JwtTokenService {
                 .compact(); 
     }
 
-    public JwtUser parseToken(String token) {
+    public JwtUser parseTokenOrNull(String token) {
+        try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7); // Remove the 'Bearer ' prefix
+            }
+            Jws<Claims> parsedToken = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+
+            return new JwtUser(parsedToken.getBody());
+        } catch (JwtException e) {
+            return null;
+        }
+    }
+
+    public JwtUser parseToken (String token){
         try {
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7); // Remove the 'Bearer ' prefix
