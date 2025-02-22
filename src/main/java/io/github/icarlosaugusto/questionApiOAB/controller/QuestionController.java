@@ -54,7 +54,7 @@ public class QuestionController {
             @RequestParam(defaultValue = "10") int size,
             @RequestHeader(value = "Authorization", required = false) String token
     ) {
-        JwtUser jwtUser = (token != null) ? jwtTokenService.parseToken(token) : null;
+        JwtUser jwtUser = (token != null) ? jwtTokenService.parseTokenOrNull(token) : null;
 
         Pageable pageable = PageRequest.of(page, size);
 
